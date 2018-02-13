@@ -4,9 +4,6 @@
 ## Public Release of Tapp2
 While you're waiting, [have a look at Tapp's licensing](https://github.com/HudsonGraeme/Tapp2/blob/master/LICENSE).
 
-
-(Clickable)
-
 ## What to expect
 - All of the abilities of Tapp
 - Autonomy

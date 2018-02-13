@@ -2,9 +2,8 @@
 [![Build Status](https://travis-ci.org/HudsonGraeme/Tapp2.svg?branch=master)](https://travis-ci.org/HudsonGraeme/Tapp2)
 
 ## Public Release of Tapp2
-While you're waiting, have a look at this video
+While you're waiting, [have a look at Tapp's licensing](https://github.com/HudsonGraeme/Tapp2/LICENSE).
 
-[![No Image](https://media.tenor.com/images/d3f6b4a79c16af001dfb8bd5a4bf808a/tenor.gif)](https://www.youtube.com/watch?v=yKWe6swJCbg)  
 
 (Clickable)
 

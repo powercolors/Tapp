@@ -6,7 +6,7 @@ While you're waiting, [have a look at Tapp's licensing](https://github.com/Hudso
 
 Here is a recent screenshot. Working very hard to bring Tapp to you!
 
-![Tapp LocationView](https://github.com/HudsonGraeme/Tapp/blob/master/Screen%20Shot%202018-02-21%20at%208.49.59%20PM.png)
+![Tapp LocationView](http://apps.carspotter.ca/TappWiki/Login.png)
 ## What to expect
 - All of the abilities of Tapp
 - Autonomy

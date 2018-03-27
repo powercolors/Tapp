@@ -4,7 +4,7 @@
 ## Public Release of Tapp2
 Thanks for coming! While you're here, [have a look at Tapp's licensing](https://github.com/HudsonGraeme/Tapp2/blob/master/LICENSE).
 
-Here is a recent screenshot. Working very hard to bring Tapp to you!
+<a href="https://github.com/HudsonGraeme/Tapp/Releases">Download Tapp Here</a>
 
 ## What to expect
 A fully functional and reliable application which is amazing at telling your vehicle what to do. I have designed Tapp to run like a tank, and have tested it on multiple devices. I have partial touchbar support, and hope to include full support in later updates. I have redesigned Tapp constantly over recent months and will continue to do so, as I'm a bit of a perfectionist. I do not have streaming yet, so the vehicle location will update every 5 seconds.

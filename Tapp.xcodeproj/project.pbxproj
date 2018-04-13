@@ -7,12 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		241CDEEC1E3FE96E00BF16ED /* KaushanScript-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 241CDEEB1E3FE96E00BF16ED /* KaushanScript-Regular.otf */; };
 		24641BC3204A416900EEB766 /* EULA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24641BC2204A416900EEB766 /* EULA.swift */; };
 		246739EB20279A1900D3E567 /* Subzero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246739EA20279A1900D3E567 /* Subzero.swift */; };
 		246BDF23201E55AE00A4AFEA /* Pod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 246BDF21201E55AE00A4AFEA /* Pod.swift */; };
 		24766E002044B7150057B568 /* FlatButton.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24766E012044B7150057B568 /* FlatButton.framework */; };
-		24766E022044B7180057B568 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24766E032044B7180057B568 /* Firebase.framework */; };
 		247EEE4C1FD2013B00293B9E /* Gigawatt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247EEE4B1FD2013B00293B9E /* Gigawatt.swift */; };
 		248F7FA31F8C065F0034CC4A /* start.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248F7FA21F8C065F0034CC4A /* start.swift */; };
 		248F7FA61F8C1FFD0034CC4A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248F7FA51F8C1FFD0034CC4A /* Extensions.swift */; };
@@ -27,8 +25,6 @@
 		24CE55921FFAD32D009DE9E3 /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 248FA69E1E5E7FFB00318497 /* ObjectMapper.framework */; };
 		24CE55931FFAD32D009DE9E3 /* Pods_Tapp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9E5695210DA7B026F5F04F1 /* Pods_Tapp.framework */; };
 		24CE55941FFAD32D009DE9E3 /* PromiseKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 248FA69C1E5E7FF700318497 /* PromiseKit.framework */; };
-		24CE55951FFAD32D009DE9E3 /* SwiftWebSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24232D851E6A597F0014F45E /* SwiftWebSocket.framework */; };
-		24CE55961FFAD32D009DE9E3 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24F4AABD1E3A78B800D378AD /* SwiftyJSON.framework */; };
 		24F0F8B21E208AF100752B9E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F0F8B11E208AF100752B9E /* AppDelegate.swift */; };
 		24F0F8B61E208AF100752B9E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24F0F8B51E208AF100752B9E /* Assets.xcassets */; };
 		24F0F8B91E208AF100752B9E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24F0F8B71E208AF100752B9E /* Main.storyboard */; };
@@ -37,8 +33,9 @@
 		24F4AABC1E3A72AF00D378AD /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 24F4AABB1E3A72AF00D378AD /* Podfile */; };
 		24F97B1E202F6CA900E514A1 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F97B1D202F6CA900E514A1 /* Preferences.swift */; };
 		24F97B22202F896700E514A1 /* PinPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F97B21202F896700E514A1 /* PinPoint.swift */; };
-		24F9BDF71FC0C57300156C97 /* ProxyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F9BDF61FC0C57300156C97 /* ProxyHandler.swift */; };
 		24F9BDFE1FC201CE00156C97 /* Plaid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F9BDFD1FC201CE00156C97 /* Plaid.swift */; };
+		F41D952C205ECD5A00CD0179 /* KaushanScript-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F41D952B205ECD5900CD0179 /* KaushanScript-Regular.ttf */; };
+		F496E71720520374006F9350 /* ProxyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = F496E71620520374006F9350 /* ProxyHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +59,6 @@
 		0DF7916EDB4AB307FDBD608B /* Pods-Tapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tapp.debug.xcconfig"; path = "Tapp/Pods/Target Support Files/Pods-Tapp/Pods-Tapp.debug.xcconfig"; sourceTree = "<group>"; };
 		2406DAED1F674E1800D8013F /* Tapp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Tapp.entitlements; sourceTree = "<group>"; };
 		241CDEE91E3FB7FB00BF16ED /* AlamofireImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlamofireImage.framework; path = "../../Library/Developer/Xcode/DerivedData/Tapp-ellmnxsugefkllhedweonghorcgo/Build/Products/Debug/AlamofireImage/AlamofireImage.framework"; sourceTree = "<group>"; };
-		241CDEEB1E3FE96E00BF16ED /* KaushanScript-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KaushanScript-Regular.otf"; sourceTree = "<group>"; };
 		24232D851E6A597F0014F45E /* SwiftWebSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftWebSocket.framework; path = "../../Library/Developer/Xcode/DerivedData/Tapp-ellmnxsugefkllhedweonghorcgo/Build/Products/Debug/SwiftWebSocket/SwiftWebSocket.framework"; sourceTree = "<group>"; };
 		24232D871E6A59830014F45E /* TeslaSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TeslaSwift.framework; path = "../../Library/Developer/Xcode/DerivedData/Tapp-ellmnxsugefkllhedweonghorcgo/Build/Products/Debug/TeslaSwift/TeslaSwift.framework"; sourceTree = "<group>"; };
 		24641BC2204A416900EEB766 /* EULA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EULA.swift; sourceTree = "<group>"; };
@@ -98,10 +94,11 @@
 		24F4AABD1E3A78B800D378AD /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = "../../Library/Developer/Xcode/DerivedData/Tapp-ellmnxsugefkllhedweonghorcgo/Build/Products/Debug/SwiftyJSON/SwiftyJSON.framework"; sourceTree = "<group>"; };
 		24F97B1D202F6CA900E514A1 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		24F97B21202F896700E514A1 /* PinPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinPoint.swift; sourceTree = "<group>"; };
-		24F9BDF61FC0C57300156C97 /* ProxyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProxyHandler.swift; path = /Users/gra/Documents/Tapp/Tapp/ProxyHandler.swift; sourceTree = "<absolute>"; };
 		24F9BDFD1FC201CE00156C97 /* Plaid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plaid.swift; sourceTree = "<group>"; };
 		3740CD24A15BFE137D5523FE /* Pods-Tapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tapp.release.xcconfig"; path = "Tapp/Pods/Target Support Files/Pods-Tapp/Pods-Tapp.release.xcconfig"; sourceTree = "<group>"; };
 		D9E5695210DA7B026F5F04F1 /* Pods_Tapp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tapp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F41D952B205ECD5900CD0179 /* KaushanScript-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "KaushanScript-Regular.ttf"; sourceTree = "<group>"; };
+		F496E71620520374006F9350 /* ProxyHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProxyHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +106,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24766E022044B7180057B568 /* Firebase.framework in Frameworks */,
 				24766E002044B7150057B568 /* FlatButton.framework in Frameworks */,
 				24CE558F1FFAD32D009DE9E3 /* Alamofire.framework in Frameworks */,
 				24CE55901FFAD32D009DE9E3 /* AlamofireImage.framework in Frameworks */,
@@ -118,8 +114,6 @@
 				24CE55921FFAD32D009DE9E3 /* ObjectMapper.framework in Frameworks */,
 				24CE55931FFAD32D009DE9E3 /* Pods_Tapp.framework in Frameworks */,
 				24CE55941FFAD32D009DE9E3 /* PromiseKit.framework in Frameworks */,
-				24CE55951FFAD32D009DE9E3 /* SwiftWebSocket.framework in Frameworks */,
-				24CE55961FFAD32D009DE9E3 /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +146,7 @@
 		24F0F8A51E208AF000752B9E = {
 			isa = PBXGroup;
 			children = (
+				F4AF855D205ECCD500AED7CB /* Resources */,
 				24F0F8B01E208AF100752B9E /* Tapp */,
 				24F0F8C21E208AF100752B9E /* TappTests */,
 				24F0F8CD1E208AF100752B9E /* TappUITests */,
@@ -188,11 +183,10 @@
 				249DF62F202BBEDD002D0E56 /* CVD.swift */,
 				249DF62D202BBEB1002D0E56 /* SelectVehicle.swift */,
 				246BDF21201E55AE00A4AFEA /* Pod.swift */,
-				24F9BDF61FC0C57300156C97 /* ProxyHandler.swift */,
+				F496E71620520374006F9350 /* ProxyHandler.swift */,
 				247EEE4B1FD2013B00293B9E /* Gigawatt.swift */,
 				24F0F8DC1E20AD9000752B9E /* login.swift */,
 				24F0F8BA1E208AF100752B9E /* Info.plist */,
-				241CDEEB1E3FE96E00BF16ED /* KaushanScript-Regular.otf */,
 				24F4AABB1E3A72AF00D378AD /* Podfile */,
 				24F9BDFD1FC201CE00156C97 /* Plaid.swift */,
 				246739EA20279A1900D3E567 /* Subzero.swift */,
@@ -235,6 +229,14 @@
 				D9E5695210DA7B026F5F04F1 /* Pods_Tapp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4AF855D205ECCD500AED7CB /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F41D952B205ECD5900CD0179 /* KaushanScript-Regular.ttf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +316,9 @@
 							com.apple.Keychain = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 1;
+							};
 						};
 					};
 					24F0F8BE1E208AF100752B9E = {
@@ -356,9 +361,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				24F4AABC1E3A72AF00D378AD /* Podfile in Resources */,
+				F41D952C205ECD5A00CD0179 /* KaushanScript-Regular.ttf in Resources */,
 				24F0F8B61E208AF100752B9E /* Assets.xcassets in Resources */,
 				24F0F8B91E208AF100752B9E /* Main.storyboard in Resources */,
-				241CDEEC1E3FE96E00BF16ED /* KaushanScript-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,13 +468,13 @@
 				24F97B1E202F6CA900E514A1 /* Preferences.swift in Sources */,
 				249DF632202D06B2002D0E56 /* About.swift in Sources */,
 				247EEE4C1FD2013B00293B9E /* Gigawatt.swift in Sources */,
-				24F9BDF71FC0C57300156C97 /* ProxyHandler.swift in Sources */,
 				248F7FA31F8C065F0034CC4A /* start.swift in Sources */,
 				24F97B22202F896700E514A1 /* PinPoint.swift in Sources */,
 				24F9BDFE1FC201CE00156C97 /* Plaid.swift in Sources */,
 				24F0F8B21E208AF100752B9E /* AppDelegate.swift in Sources */,
 				249AF82C2032420D0007E5F7 /* Specs.swift in Sources */,
 				246BDF23201E55AE00A4AFEA /* Pod.swift in Sources */,
+				F496E71720520374006F9350 /* ProxyHandler.swift in Sources */,
 				249DF62E202BBEB1002D0E56 /* SelectVehicle.swift in Sources */,
 				246739EB20279A1900D3E567 /* Subzero.swift in Sources */,
 			);
@@ -635,7 +640,7 @@
 				INFOPLIST_FILE = Tapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = HudsonGraeme.Dev.Tapp;
+				PRODUCT_BUNDLE_IDENTIFIER = hudsongraeme.tapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
@@ -655,7 +660,7 @@
 				INFOPLIST_FILE = Tapp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = HudsonGraeme.Dev.Tapp;
+				PRODUCT_BUNDLE_IDENTIFIER = hudsongraeme.tapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;

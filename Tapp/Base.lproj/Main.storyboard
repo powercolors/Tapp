@@ -2,11 +2,13 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" initialViewController="FQj-xb-KPZ">
     <dependencies>
         <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="13752"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <plugIn identifier="com.apple.MapKitIBPlugin" version="13771"/>
         <plugIn identifier="com.apple.WebKitIBPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+        <capability name="the Touch Bar" message="Use a version of macOS with Touch Bar support." minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
     </dependencies>
     <scenes>
         <!--Location-->
@@ -18,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="620" height="486"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <mapView misplaced="YES" mapType="standard" showsTraffic="YES" id="bxg-VQ-m9C">
+                            <mapView misplaced="YES" mapType="standard" showsUserLocation="YES" showsTraffic="YES" id="bxg-VQ-m9C">
                                 <rect key="frame" x="0.0" y="0.0" width="620" height="486"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </mapView>
@@ -31,15 +33,30 @@
                                     <color key="backgroundColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="bar" id="BF5-VV-Xht">
-                                <rect key="frame" x="77" y="237" width="467" height="12"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="IrP-tC-WZ4">
+                                <rect key="frame" x="237" y="253" width="146" height="54"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Loading" id="zNK-WM-lnQ">
+                                    <font key="font" metaFont="systemThin" size="40"/>
+                                    <color key="textColor" name="knobColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <progressIndicator wantsLayer="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" maxValue="100" doubleValue="5" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" style="spinning" id="BF5-VV-Xht">
+                                <rect key="frame" x="294" y="213" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </progressIndicator>
+                            <customView misplaced="YES" id="8m2-ZW-KXh" customClass="LineChartView" customModule="Charts">
+                                <rect key="frame" x="20" y="0.0" width="580" height="96"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </customView>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="InfoBox" destination="d6f-7b-Kgk" id="uHn-cd-sKO"/>
+                        <outlet property="LoadLabel" destination="IrP-tC-WZ4" id="DTq-0h-YMt"/>
                         <outlet property="Map" destination="bxg-VQ-m9C" id="Hjq-I6-Eht"/>
+                        <outlet property="PowerGraph" destination="8m2-ZW-KXh" id="cGg-PO-6H5"/>
                         <outlet property="ProgBar" destination="BF5-VV-Xht" id="US5-nP-YJB"/>
                     </connections>
                 </viewController>
@@ -422,6 +439,68 @@
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="File" id="kpa-Ns-THD">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="File" id="GRI-t5-fi0">
+                                    <items>
+                                        <menuItem title="Close" keyEquivalent="w" id="Ot7-SO-8gi">
+                                            <connections>
+                                                <action selector="performClose:" target="Ady-hI-5gd" id="h40-20-ffB"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Edit" id="JwE-3i-aEO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Edit" id="tjA-dX-jPq">
+                                    <items>
+                                        <menuItem title="Undo" keyEquivalent="z" id="MGi-h2-Zxq">
+                                            <connections>
+                                                <action selector="undo:" target="Ady-hI-5gd" id="fRl-3F-MfC"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Redo" keyEquivalent="Z" id="7dF-B3-Py6">
+                                            <connections>
+                                                <action selector="redo:" target="Ady-hI-5gd" id="ERT-O5-T3F"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="DQc-Xk-yJp"/>
+                                        <menuItem title="Cut" keyEquivalent="x" id="Ork-sF-H6j">
+                                            <connections>
+                                                <action selector="cut:" target="Ady-hI-5gd" id="8Fj-Vj-lkq"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Copy" keyEquivalent="c" id="Vxj-gG-cQl">
+                                            <connections>
+                                                <action selector="copy:" target="Ady-hI-5gd" id="kfS-Ea-YIA"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Paste" keyEquivalent="v" id="MHM-8T-WYK">
+                                            <connections>
+                                                <action selector="paste:" target="Ady-hI-5gd" id="22N-z6-DNP"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Paste and Match Style" keyEquivalent="V" id="Wly-Sc-1v4">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="pasteAsPlainText:" target="Ady-hI-5gd" id="65g-Bt-qLe"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Delete" keyEquivalent="=" id="JYb-uW-lfg">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="delete:" target="Ady-hI-5gd" id="Eoo-l4-OQY"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Select All" keyEquivalent="a" id="zQp-u1-Ua4">
+                                            <connections>
+                                                <action selector="selectAll:" target="Ady-hI-5gd" id="uZN-P5-UFc"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                             <menuItem title="Help" id="wpr-3q-Mcd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
@@ -584,7 +663,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -609,7 +688,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -634,7 +713,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -659,7 +738,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -709,7 +788,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.78431372549019607" green="0.78431372549019607" blue="0.78431372549019607" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -729,7 +808,7 @@
                                 <rect key="frame" x="30" y="0.0" width="157" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="HudsonGraeme" id="NUF-qP-Dis">
-                                    <font key="font" size="14" name="KaushanScript-Regular"/>
+                                    <font key="font" metaFont="system" size="14"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -743,7 +822,7 @@
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.29999999999999999" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="deviceRGB"/>
+                                        <color key="value" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="activeButtonColor">
                                         <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -763,7 +842,7 @@
                                 <rect key="frame" x="30" y="20" width="157" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Tapp2" id="peO-jI-IH1">
-                                    <font key="font" size="42" name="KaushanScript-Regular"/>
+                                    <font key="font" metaFont="system" size="42"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -774,10 +853,12 @@
                         <outlet property="Battery" destination="CNV-6z-c9y" id="jRp-JW-OAB"/>
                         <outlet property="Climate" destination="roo-FT-TOi" id="PGO-EX-Rl5"/>
                         <outlet property="Home" destination="z3o-hB-Br5" id="nVP-D8-NJw"/>
+                        <outlet property="HudsonGraeme" destination="kuN-9K-EdR" id="Lih-5D-EZ8"/>
                         <outlet property="Info" destination="6d4-Pz-z3I" id="gdY-Of-Vic"/>
                         <outlet property="Location" destination="ElV-8J-a7G" id="pVv-Pd-HxO"/>
                         <outlet property="Logout" destination="FsH-s0-OVy" id="H87-mB-emm"/>
                         <outlet property="Settings" destination="Auf-fO-ZFx" id="67u-9H-fA3"/>
+                        <outlet property="Tapp2" destination="yiu-dK-NbA" id="4Gc-bV-jqL"/>
                         <segue destination="FQj-xb-KPZ" kind="show" identifier="BackToLogin" id="jk4-pl-wa9"/>
                     </connections>
                 </viewController>
@@ -898,6 +979,42 @@
                             </textField>
                         </subviews>
                     </view>
+                    <touchBar key="touchBar" id="uyI-AK-of7">
+                        <touchBarItems>
+                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="m93-TP-kT3"/>
+                            <touchBarItem id="h9L-cg-CbJ">
+                                <viewController key="viewController" id="eVR-zy-k9s">
+                                    <button key="view" verticalHuggingPriority="750" id="Uic-No-7Xm">
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="I Accept" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ch5-N7-jQ0">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="alternateSelectedControlColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="bLa-pP-cV0" id="4qo-Tf-o3H"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="ccx-1A-LdA">
+                                <viewController key="viewController" id="OwL-Fx-jg2">
+                                    <button key="view" verticalHuggingPriority="750" id="tyb-bs-ZOb">
+                                        <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="I Do Not Accept" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="kJx-X8-nQP">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="performClick:" target="WD5-A3-im7" id="mOw-HK-cMi"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                        </touchBarItems>
+                    </touchBar>
                     <connections>
                         <outlet property="Accept" destination="bLa-pP-cV0" id="5AG-3i-l3D"/>
                         <outlet property="Decline" destination="WD5-A3-im7" id="5SH-H5-xZ4"/>
@@ -1076,11 +1193,11 @@ DQ
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="V38-QU-Bpj">
-                                <rect key="frame" x="-2" y="148" width="454" height="189"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="V38-QU-Bpj">
+                                <rect key="frame" x="-2" y="223" width="454" height="122"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Tapp" id="W6o-qK-sWn">
-                                    <font key="font" size="72" name="KaushanScript-Regular"/>
+                                    <font key="font" metaFont="systemThin" size="72"/>
                                     <color key="textColor" name="scrollBarColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1112,6 +1229,28 @@ AAAAAAEGA
                             </caTransition>
                         </animations>
                     </view>
+                    <touchBar key="touchBar" id="NDr-ik-qf2">
+                        <touchBarItems>
+                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="HkD-6I-UaT"/>
+                            <touchBarItem id="SFJ-Mg-UBw">
+                                <viewController key="viewController" id="V5z-J1-OFl">
+                                    <button key="view" verticalHuggingPriority="750" id="L27-Xl-Cc1">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Login" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NYN-v9-H5M">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" red="0.17709903671595317" green="0.58579324350276329" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="performClick:" target="Tjm-nT-xpk" id="F0y-Na-LBN"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarSpacerItem identifier="NSTouchBarItemIdentifierFlexibleSpace" id="TZP-vY-GcR"/>
+                        </touchBarItems>
+                    </touchBar>
                     <connections>
                         <outlet property="acctok" destination="zqW-dK-qR5" id="GeE-N5-rTf"/>
                         <outlet property="email" destination="5KT-Mv-elx" id="1GY-N8-6po"/>
@@ -1133,7 +1272,7 @@ AAAAAAEGA
                 </viewController>
                 <customObject id="E16-N8-cK7" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2138" y="541"/>
+            <point key="canvasLocation" x="-1997" y="507"/>
         </scene>
         <!--Vehicle Selection-->
         <scene sceneID="f8I-q2-wco">
@@ -1751,7 +1890,7 @@ AAAAAAEGA
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="compositor" id="LuP-S5-eEo"/>
                             </imageView>
                             <button verticalHuggingPriority="750" misplaced="YES" id="SvW-q2-Rcd" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="45" y="376" width="155" height="31"/>
+                                <rect key="frame" x="26" y="366" width="174" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Open Charge Port" bezelStyle="rounded" imagePosition="overlaps" alignment="center" imageScaling="proportionallyDown" inset="2" id="2yB-tS-tea">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1762,13 +1901,13 @@ AAAAAAEGA
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="value" red="0.0" green="0.59999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1784,42 +1923,8 @@ AAAAAAEGA
                                     <action selector="ChargePort:" target="ekw-bb-fFW" id="sJo-jK-HIu"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" misplaced="YES" id="hCA-CK-OsH" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="416" y="263" width="111" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="bevel" title="Frunk" bezelStyle="circular" alignment="center" imageScaling="proportionallyDown" inset="2" id="I3O-4f-vTK">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="systemThin" size="18"/>
-                                </buttonCell>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
-                                        <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="onAnimationDuration">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="offAnimationDuration">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="Frunk:" target="ekw-bb-fFW" id="KhL-cE-dOt"/>
-                                </connections>
-                            </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="H3b-6r-Q4D" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="231" y="376" width="102" height="31"/>
+                                <rect key="frame" x="231" y="368" width="116" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Lock" bezelStyle="circular" imagePosition="overlaps" alignment="center" imageScaling="proportionallyDown" inset="2" id="zgK-gt-mF4">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1830,13 +1935,13 @@ AAAAAAEGA
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="value" red="0.0" green="0.59999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1853,7 +1958,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="cQF-LY-DNe" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="255" y="136" width="111" height="31"/>
+                                <rect key="frame" x="255" y="128" width="129" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Headlights" bezelStyle="circular" alignment="center" imageScaling="proportionallyDown" inset="2" id="mHT-lA-PeO">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1864,13 +1969,13 @@ AAAAAAEGA
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="value" red="0.0" green="0.59999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1887,7 +1992,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="dVy-cz-SIO" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="59" y="136" width="155" height="31"/>
+                                <rect key="frame" x="59" y="128" width="167" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Remote Start" bezelStyle="rounded" imagePosition="overlaps" alignment="center" imageScaling="proportionallyDown" inset="2" id="oih-ln-qYq">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -1898,13 +2003,13 @@ AAAAAAEGA
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.30253231525421143" green="0.27842408418655396" blue="0.27401328086853027" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="value" red="0.20000000000000001" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1921,7 +2026,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="bs2-c8-50U" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="416" y="137" width="95" height="29"/>
+                                <rect key="frame" x="424" y="128" width="103" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Horn" bezelStyle="circular" alignment="center" imageScaling="proportionallyDown" inset="2" id="FuB-ud-sXP">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1935,16 +2040,16 @@ AAAAAAEGA
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.30253231530000002" green="0.27842408419999998" blue="0.27401328089999999" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="value" red="0.0" green="0.59999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1955,7 +2060,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="N5B-xg-M4h" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="81" y="263" width="111" height="31"/>
+                                <rect key="frame" x="81" y="263" width="111" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="Trunk" bezelStyle="circular" alignment="center" imageScaling="proportionallyDown" inset="2" id="ffB-Mm-nb4">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -1998,7 +2103,7 @@ AAAAAAEGA
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="HSX-XX-yeX">
-                                <rect key="frame" x="0.0" y="437" width="622" height="35"/>
+                                <rect key="frame" x="12" y="439" width="517" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Charging?" id="Ilv-mz-WhN">
                                     <font key="font" metaFont="systemThin" size="23"/>
@@ -2006,8 +2111,169 @@ AAAAAAEGA
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" misplaced="YES" id="hCA-CK-OsH" customClass="FlatButton" customModule="FlatButton">
+                                <rect key="frame" x="420" y="263" width="111" height="39"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="bevel" title="Frunk" bezelStyle="circular" alignment="center" imageScaling="proportionallyDown" inset="2" id="I3O-4f-vTK">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="systemThin" size="18"/>
+                                </buttonCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
+                                        <color key="value" red="0.0" green="0.59999999999999998" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" red="0.92931067940000001" green="0.92946994299999997" blue="0.92930072549999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="onAnimationDuration">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="offAnimationDuration">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="Frunk:" target="ekw-bb-fFW" id="KhL-cE-dOt"/>
+                                </connections>
+                            </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="n9r-FZ-hhS">
+                                <rect key="frame" x="535" y="431" width="67" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="P" id="PFg-km-dXl">
+                                    <font key="font" metaFont="system" size="42"/>
+                                    <color key="textColor" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
+                    <touchBar key="touchBar" id="BqD-jO-mgr">
+                        <touchBarItems>
+                            <touchBarItem id="BQU-3t-W5t">
+                                <viewController key="viewController" id="bio-Xk-Lik">
+                                    <button key="view" verticalHuggingPriority="750" id="jYq-jp-tgm">
+                                        <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Open Charge Port" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BQ6-is-hTV">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="SvW-q2-Rcd" id="jaP-gi-PfY"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="emM-R6-tnz">
+                                <viewController key="viewController" id="U3U-f2-PIy">
+                                    <button key="view" verticalHuggingPriority="750" id="oke-ZR-Uo4">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Lock" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Clp-xY-h3h">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="H3b-6r-Q4D" id="MyP-Ce-CGo"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="jIJ-CF-FwG">
+                                <viewController key="viewController" id="IFU-nr-53F">
+                                    <button key="view" verticalHuggingPriority="750" id="hag-ok-P8S">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Trunk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ie4-Kr-xmt">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" red="0.17709903669999999" green="0.58579324349999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="performClick:" target="N5B-xg-M4h" id="e1d-dd-sq2"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="QHw-uI-TNf">
+                                <viewController key="viewController" id="qHM-rg-g8L">
+                                    <button key="view" verticalHuggingPriority="750" id="Vvb-r0-gDQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Frunk" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Q1V-Eh-U5i">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" red="0.17709903669999999" green="0.58579324349999995" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="performClick:" target="hCA-CK-OsH" id="kU3-3K-L81"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="WO2-bp-U9L">
+                                <viewController key="viewController" id="jIm-Cq-P0b">
+                                    <button key="view" verticalHuggingPriority="750" id="udV-pa-ixD">
+                                        <rect key="frame" x="0.0" y="0.0" width="72" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Horn" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cZs-2p-JRL">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="systemOrangeColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="bs2-c8-50U" id="wHg-5O-YQq"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                            </touchBarItem>
+                            <touchBarItem id="J3K-aD-G5f">
+                                <viewController key="viewController" id="5R7-Z5-k9K">
+                                    <button key="view" verticalHuggingPriority="750" id="qnp-Cv-P2c">
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Headlights" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hJz-20-OB7">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="systemGreenColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="cQF-LY-DNe" id="fNW-Kp-F7e"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                                <size key="designTimeSize" width="90" height="30"/>
+                            </touchBarItem>
+                            <touchBarItem id="gf6-Sy-IH8">
+                                <viewController key="viewController" id="8zV-LK-6qz">
+                                    <button key="view" verticalHuggingPriority="750" id="XA3-C6-sj8">
+                                        <rect key="frame" x="0.0" y="0.0" width="108" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Remote Start" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Stf-Wm-deg">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" usesAppearanceFont="YES"/>
+                                        </buttonCell>
+                                        <color key="bezelColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                        <connections>
+                                            <action selector="performClick:" target="dVy-cz-SIO" id="aXD-bg-7Sw"/>
+                                        </connections>
+                                    </button>
+                                </viewController>
+                                <size key="designTimeSize" width="108" height="30"/>
+                            </touchBarItem>
+                        </touchBarItems>
+                    </touchBar>
                     <connections>
                         <outlet property="ChargeLabel" destination="HSX-XX-yeX" id="8Yv-cV-7li"/>
                         <outlet property="ChargePort" destination="SvW-q2-Rcd" id="VZp-Rx-Pjh"/>
@@ -2016,6 +2282,14 @@ AAAAAAEGA
                         <outlet property="Horn" destination="bs2-c8-50U" id="0xV-fe-aNl"/>
                         <outlet property="Lock" destination="H3b-6r-Q4D" id="fen-P1-m83"/>
                         <outlet property="RStart" destination="dVy-cz-SIO" id="85A-K3-mwv"/>
+                        <outlet property="Shift" destination="n9r-FZ-hhS" id="bPn-Mn-aua"/>
+                        <outlet property="TbChargePort" destination="BQU-3t-W5t" id="bOL-VB-R2T"/>
+                        <outlet property="TbFlashLights" destination="J3K-aD-G5f" id="E11-DH-P9R"/>
+                        <outlet property="TbFrunk" destination="QHw-uI-TNf" id="nGH-cp-XgA"/>
+                        <outlet property="TbHorn" destination="WO2-bp-U9L" id="Kl2-GI-bVd"/>
+                        <outlet property="TbLock" destination="emM-R6-tnz" id="0l9-Uq-TXf"/>
+                        <outlet property="TbRStart" destination="gf6-Sy-IH8" id="CNM-KM-fyW"/>
+                        <outlet property="TbTrunk" destination="jIJ-CF-FwG" id="PIC-Xl-9yG"/>
                         <outlet property="Trunk" destination="N5B-xg-M4h" id="l5K-eP-erT"/>
                         <outlet property="VIN" destination="yQN-Pe-5XB" id="lJU-1a-mSp"/>
                         <outlet property="VehicleImage" destination="bHU-S4-J8c" id="XVV-eY-ydi"/>
@@ -2040,15 +2314,11 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="LowBattery" id="cic-Q9-iQ9"/>
                             </imageView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="vnv-DI-ENp">
-                                <rect key="frame" x="120" y="413" width="380" height="53"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="uzm-ir-m2U">
+                                <rect key="frame" x="20" y="13" width="580" height="162"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="%" id="DXG-hq-USi">
-                                    <font key="font" metaFont="systemThin" size="35"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="kum-nN-Q3A"/>
+                            </imageView>
                             <button verticalHuggingPriority="750" misplaced="YES" id="QRk-6b-Zum" customClass="FlatButton" customModule="FlatButton">
                                 <rect key="frame" x="471" y="115" width="119" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -2056,6 +2326,14 @@ AAAAAAEGA
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </button>
                             <customView misplaced="YES" id="42j-V6-P3P" customClass="LineChartView" customModule="Charts">
                                 <rect key="frame" x="0.0" y="183" width="620" height="204"/>
@@ -2068,6 +2346,17 @@ AAAAAAEGA
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="Standard90:" target="IVU-XZ-m5Y" id="8PM-yV-ya2"/>
+                                </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="4nm-0h-bny" customClass="FlatButton" customModule="FlatButton">
                                 <rect key="frame" x="258" y="12" width="105" height="37"/>
@@ -2076,15 +2365,45 @@ AAAAAAEGA
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
+                                        <color key="value" red="0.0" green="1" blue="0.69570728207683752" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="onAnimationDuration">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="offAnimationDuration">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="ChargeControl:" target="IVU-XZ-m5Y" id="XHM-HE-bKB"/>
                                 </connections>
                             </button>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" id="uzm-ir-m2U">
-                                <rect key="frame" x="20" y="13" width="580" height="162"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="vnv-DI-ENp">
+                                <rect key="frame" x="120" y="122" width="380" height="53"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="kum-nN-Q3A"/>
-                            </imageView>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="%" id="DXG-hq-USi">
+                                    <font key="font" metaFont="systemThin" size="35"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="MaxRange:" target="IVU-XZ-m5Y" id="jN3-zP-bJW"/>
+                                </connections>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
@@ -2093,9 +2412,9 @@ AAAAAAEGA
                         <outlet property="ChargeLimit" destination="42j-V6-P3P" id="4Dh-aa-JmV"/>
                         <outlet property="ChargingImage" destination="uzm-ir-m2U" id="Sxa-Fs-Tq8"/>
                         <outlet property="Graph" destination="42j-V6-P3P" id="n6g-yt-yzz"/>
-                        <outlet property="MaxRange" destination="QRk-6b-Zum" id="te9-xi-Qma"/>
+                        <outlet property="MaxRange" destination="QRk-6b-Zum" id="eSK-l2-cxf"/>
                         <outlet property="PercentageLabel" destination="vnv-DI-ENp" id="1Si-K3-6xi"/>
-                        <outlet property="Standard90" destination="hkf-SG-dKw" id="LR6-za-Ije"/>
+                        <outlet property="Standard90" destination="hkf-SG-dKw" id="Grv-FI-bYk"/>
                     </connections>
                 </viewController>
             </objects>
@@ -2131,7 +2450,7 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Exterior Temperature" id="aqy-VK-EFw">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
@@ -2140,7 +2459,7 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Interior Temperature" id="4VY-dL-Wz0">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
@@ -2149,8 +2468,8 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Driver" id="NmL-xy-8rU">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="NQi-Dl-sPJ">
@@ -2158,12 +2477,12 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Passenger" id="ebs-yU-Od7">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" misplaced="YES" id="CS3-JJ-Y2R" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="481" y="102" width="119" height="37"/>
+                                <rect key="frame" x="481" y="102" width="119" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="up" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="vLL-uM-qWS">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2174,7 +2493,10 @@ AAAAAAEGA
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -2182,7 +2504,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="HKv-uZ-Pv8" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="20" y="102" width="119" height="37"/>
+                                <rect key="frame" x="20" y="102" width="119" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="up" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uYm-i9-VIM">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2193,7 +2515,10 @@ AAAAAAEGA
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -2201,7 +2526,7 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="oys-ET-zYV" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="20" y="19" width="119" height="37"/>
+                                <rect key="frame" x="20" y="29" width="119" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="down" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="LDv-8a-KYY">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -2212,7 +2537,10 @@ AAAAAAEGA
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -2220,18 +2548,24 @@ AAAAAAEGA
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" misplaced="YES" id="5CQ-bC-dZP" customClass="FlatButton" customModule="FlatButton">
-                                <rect key="frame" x="481" y="19" width="119" height="37"/>
+                                <rect key="frame" x="481" y="29" width="119" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="down" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZNQ-5Z-IRS">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="0.0"/>
-                                    </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" name="systemBlueColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="offAnimationDuration">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="onAnimationDuration">
+                                        <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
@@ -2253,7 +2587,7 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Exterior Temperature" id="a10-wG-sOf">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
@@ -2262,7 +2596,7 @@ AAAAAAEGA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Interior Temperature" id="3Jh-6q-O2H">
                                     <font key="font" metaFont="systemThin" size="20"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" red="0.7843137255" green="0.7843137255" blue="0.7843137255" alpha="1" colorSpace="deviceRGB"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
@@ -2280,16 +2614,36 @@ AAAAAAEGA
                                 </buttonCell>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
-                                        <color key="value" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" red="0.20000000000000001" green="0.80000000000000004" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="5"/>
+                                        <real key="value" value="15"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                        <color key="value" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="HVACControl:" target="CZM-X3-aJD" id="M7A-NG-Awp"/>
                                 </connections>
                             </button>
+                            <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="TG9-qK-4kR">
+                                <rect key="frame" x="18" y="228" width="215" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Seats Heating:" id="YdW-Yc-OMe">
+                                    <font key="font" metaFont="systemThin" size="24"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" id="0v5-PA-Vbr">
+                                <rect key="frame" x="237" y="172" width="370" height="86"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="tQV-if-22X">
+                                    <font key="font" metaFont="systemThin" size="24"/>
+                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
@@ -2298,6 +2652,7 @@ AAAAAAEGA
                         <outlet property="DriverUp" destination="HKv-uZ-Pv8" id="X5Q-cM-JX2"/>
                         <outlet property="ExtTemperatureLabel" destination="F8f-0Y-24c" id="C8e-KW-hIp"/>
                         <outlet property="ExteriorTemperature" destination="pa3-p0-n7e" id="Ggh-Ve-l7Q"/>
+                        <outlet property="HSeats" destination="TG9-qK-4kR" id="7LD-ve-tme"/>
                         <outlet property="HVACControl" destination="1TX-KJ-gYJ" id="8Io-rq-JeQ"/>
                         <outlet property="HVACImage" destination="zz4-eF-M49" id="786-fp-13t"/>
                         <outlet property="IntTemperatureLabel" destination="NKx-Yn-mf9" id="Cxh-SE-l4G"/>
@@ -2305,6 +2660,7 @@ AAAAAAEGA
                         <outlet property="PassengerDown" destination="5CQ-bC-dZP" id="EwK-BJ-ny1"/>
                         <outlet property="PassengerTempLabel" destination="NQi-Dl-sPJ" id="P4i-zo-H9a"/>
                         <outlet property="PassengerUp" destination="CS3-JJ-Y2R" id="QuI-Gp-WPk"/>
+                        <outlet property="SeatLbl" destination="0v5-PA-Vbr" id="yWs-pY-eFr"/>
                     </connections>
                 </viewController>
             </objects>
@@ -2324,9 +2680,9 @@ AAAAAAEGA
         <image name="up" width="25.263158798217773" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="utZ-H3-VDL"/>
-        <segue reference="ztd-iQ-sau"/>
-        <segue reference="Kpg-ix-HCI"/>
+        <segue reference="yy0-Lu-XKV"/>
+        <segue reference="owP-Lw-aK5"/>
+        <segue reference="msp-YA-bkP"/>
         <segue reference="S1F-g1-SLj"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -75,6 +75,9 @@ class SelectVehicle : NSViewController {
         } else {
             
         }*/
+        DispatchQueue.main.asyncAfter(wallDeadline: DispatchWallTime.now() + .seconds(1)) {
+            //Alamofire
+        }
     }
     
     @IBOutlet weak var Click1: NSButton!
@@ -84,7 +87,6 @@ class SelectVehicle : NSViewController {
     @IBOutlet weak var Click5: NSButton!
     @IBOutlet weak var Loading: NSLevelIndicator!
     @IBOutlet weak var LoadingText: NSTextField!
-    
     
     func getimg(_ Car: Int) {
         self.Loading.integerValue = 3
@@ -136,7 +138,7 @@ class SelectVehicle : NSViewController {
                 if(data != nil) {
                     let json = JSON(data!)
                     print(json)
-                    CVD.Data.append(json)
+                    CVD.Data = json
                     let vehMod = json["response"]["vehicle_config"]["car_type"].stringValue
                     CVD.VehicleTrims.append(vehMod.last!)
                     var carname = String()
@@ -146,15 +148,15 @@ class SelectVehicle : NSViewController {
                         carname = "Error"
                     }
                     switch Car {
-                    case 5:
-                        self.Click5.title = carname
                     case 4:
-                        self.Click4.title = carname
+                        self.Click5.title = carname
                     case 3:
-                        self.Click3.title = carname
+                        self.Click4.title = carname
                     case 2:
-                        self.Click2.title = carname
+                        self.Click3.title = carname
                     case 1:
+                        self.Click2.title = carname
+                    case 0:
                         self.Click1.title = carname
                     default:
                         self.Click1.title = carname
@@ -201,3 +203,4 @@ class SelectVehicle : NSViewController {
     
     
 }
+

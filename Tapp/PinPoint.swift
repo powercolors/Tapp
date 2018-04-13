@@ -10,12 +10,15 @@ import Cocoa
 import MapKit
 import Alamofire
 import SwiftyJSON
+import Charts
 
 class PinPoint: NSViewController {
     
     @IBOutlet weak var Map: MKMapView!
     @IBOutlet weak var InfoBox: NSTextField!
     @IBOutlet weak var ProgBar: NSProgressIndicator!
+    @IBOutlet weak var LoadLabel: NSTextField!
+    @IBOutlet weak var PowerGraph: LineChartView!
     
     override func viewDidLoad() {
         self.view.alphaValue = 0.5
@@ -23,23 +26,45 @@ class PinPoint: NSViewController {
         Map.showsTraffic = true
         Map.showsUserLocation = true
         getimg()
-        timer.invalidate()
+        self.loadData()
         Map.camera.altitude = 1000
+        ProgBar.startAnimation(self)
+        self.PowerGraph.leftAxis.enabled = false
+        self.PowerGraph.rightAxis.enabled = false
+        self.PowerGraph.scaleXEnabled = false
+        self.PowerGraph.leftAxis.drawGridLinesEnabled = false
+        self.PowerGraph.leftAxis.drawAxisLineEnabled = false
+        self.PowerGraph.rightAxis.drawGridLinesEnabled = false
+        self.PowerGraph.rightAxis.drawAxisLineEnabled = false
+        self.PowerGraph.xAxis.enabled = false
+        self.PowerGraph.legend.enabled = false
+        self.PowerGraph.xAxis.axisMinimum = 0
+        self.PowerGraph.toolTip = "Current power level"
     }
+    
     override func viewDidAppear() {
         super.viewDidAppear()
         if(CVD.locationTimer == 0.0) {
             CVD.locationTimer = 5.0
         }
+        /*if(CVD.Data["response"]["drive_state"]["shift_state"].stringValue == "P"||CVD.Data["response"]["drive_state"]["shift_state"] == JSON.null) {
+            self.PowerPowerPowerGraph.isHidden = true
+        } else { //Debating adding this.. Kinda takes away from experience
+            self.PowerPowerPowerGraph.isHidden = false
+        }*/
+        if(UserDefaults.standard.value(forKey: "PowerLevels") != nil) {
+        CVD.PowerLevels = UserDefaults.standard.value(forKey: "PowerLevels") as! [Int]
+        }
         timer = Timer.scheduledTimer(timeInterval: CVD.locationTimer, target: self, selector: #selector(self.loadData), userInfo: nil, repeats: true)
     }
+    
     override func viewDidDisappear() {
         timer.invalidate()
     }
-    
+    var lineChartEntry = [ChartDataEntry]()
     var timer = Timer()
     
-        var places = Place.getPlaces(CVD.Data[0])
+        var places = Place.getPlaces(CVD.Data)
         let locationManager = CLLocationManager()
         let v = CVD.SelectedVehicle
     
@@ -58,6 +83,47 @@ class PinPoint: NSViewController {
                     if(data != nil) {
                         self.InfoBox.stringValue = ""
                         let json = JSON(data!)
+                        
+                        //GRAPH
+                        if(CVD.PowerLevels.count >= 10) {
+                            CVD.PowerLevels.removeFirst()
+                        }
+                        if(CVD.PowerLevels.isEmpty) {
+                            self.PowerGraph.leftAxis.axisMaximum = 100
+                            self.PowerGraph.leftAxis.axisMinimum = -100
+                            self.PowerGraph.rightAxis.axisMaximum = 100
+                            self.PowerGraph.rightAxis.axisMinimum = -100
+                        } else {
+                            self.PowerGraph.leftAxis.axisMaximum = Double(CVD.PowerLevels.first! + 50)
+                            self.PowerGraph.leftAxis.axisMinimum = Double(CVD.PowerLevels.first! - 50)
+                            self.PowerGraph.rightAxis.axisMaximum = Double(CVD.PowerLevels.last! + 50)
+                            self.PowerGraph.rightAxis.axisMinimum = Double(CVD.PowerLevels.last! - 50)
+                        }
+                        CVD.PowerLevels.append(json["response"]["power"].intValue)
+                        UserDefaults.standard.set(CVD.PowerLevels, forKey: "PowerLevels")
+                        let levs = (CVD.PowerLevels.count - 1)
+                        for i in 0...levs {
+                            let value = ChartDataEntry(x: Double(i), y: Double(CVD.PowerLevels[i]))
+                            self.lineChartEntry.append(value)
+                        }
+                        let line = LineChartDataSet(values: self.lineChartEntry, label: "Power Level")
+                        line.colors = [.systemBlue]
+                        line.mode = .cubicBezier
+                        line.fillColor = .systemBlue
+                        line.fillAlpha = 0.5
+                        line.drawFilledEnabled = true
+                        line.drawCirclesEnabled = false
+                        
+                        let chartdat = LineChartData()
+                        chartdat.addDataSet(line)
+                        chartdat.setDrawValues(false)
+                        self.PowerGraph?.data = chartdat
+                        self.PowerGraph?.chartDescription?.text = "Battery Level %"
+                        
+                        
+                        // END GRAPH
+                        
+                        
                         self.Map.removeAnnotations(self.places)
                         let latitude:CLLocationDegrees = json["response"]["latitude"].doubleValue
                         let longitude:CLLocationDegrees = json["response"]["longitude"].doubleValue
@@ -73,15 +139,15 @@ class PinPoint: NSViewController {
                             let speed = json["response"]["speed"].intValue
                             if(shiftState == "R") {
                                 self.InfoBox.stringValue += "Vehicle in Reverse, "
-                                self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data[CVD.SelectedVehicle]["response"]["gui_settings"]["gui_distance_units"].stringValue)"
+                                self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data["response"]["gui_settings"]["gui_distance_units"].stringValue)"
                                 self.InfoBox.stringValue += ", facing \(json["response"]["heading"].intValue)°"
                             } else if(shiftState == "D") {
                                 self.InfoBox.stringValue += "Vehicle in Drive, "
-                               self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data[CVD.SelectedVehicle]["response"]["gui_settings"]["gui_distance_units"].stringValue)"
+                               self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data["response"]["gui_settings"]["gui_distance_units"].stringValue)"
                                self.InfoBox.stringValue += ", facing \(json["response"]["heading"].intValue)°"
                             } else if(shiftState == "N") {
                                 self.InfoBox.stringValue += "Vehicle in Neutral, "
-                                self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data[CVD.SelectedVehicle]["response"]["gui_settings"]["gui_distance_units"].stringValue)"
+                                self.InfoBox.stringValue += "travelling at \(speed)\(CVD.Data["response"]["gui_settings"]["gui_distance_units"].stringValue)"
                                 self.InfoBox.stringValue += ", facing \(json["response"]["heading"].intValue)°"
                             }
                             CVD.locationTimer = 5.0
@@ -111,6 +177,9 @@ class PinPoint: NSViewController {
                         if(!self.ProgBar.isHidden) {
                         self.ProgBar.isHidden = true
                         }
+                        if(!self.LoadLabel.isHidden) {
+                            self.LoadLabel.isHidden = true
+                        }
                     }
                     else {
                         print("error")
@@ -123,7 +192,6 @@ class PinPoint: NSViewController {
         Map?.addAnnotations(places)
         let overlays = places.map { MKCircle(center: $0.coordinate, radius: 50) }
         Map?.addOverlays(overlays)
-        
     }
     
     func getimg() {
@@ -154,7 +222,7 @@ class PinPoint: NSViewController {
     static func getPlaces(_ json: JSON) -> [Place] {
         
         var places = [Place]()
-        let jsond = CVD.Data[CVD.SelectedVehicle]
+        let jsond = CVD.Data
         let latitude = json["response"]["latitude"].doubleValue
         let longitude = json["response"]["longitude"].doubleValue
         let vehicleName = jsond["response"]["display_name"].stringValue
@@ -181,7 +249,7 @@ extension NSViewController: MKMapViewDelegate {
         else {
             let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotationView") ?? MKAnnotationView()
             #imageLiteral(resourceName: "Nav").size = NSSize(width: 40.0, height: 40.0)
-            let json = CVD.Data[CVD.SelectedVehicle]
+            let json = CVD.Data
             annotationView.image = #imageLiteral(resourceName: "Nav").imageRotatedByDegreess(degrees: CGFloat((json["response"]["drive_state"]["heading"].floatValue - 100)))
             
             return annotationView

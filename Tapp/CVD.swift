@@ -12,10 +12,12 @@ import Alamofire
 
 struct CVD {
     //LOL
-    let name = "Central Variable Dimension"
+    let name = "Center of the Variable District"
     //END LOL
-    static var Levels = [Int]()
+    
     //GENERAL
+    static var Levels = [Int]()
+    static var PowerLevels = [Int]()
     static var SavedToken = false
     static var Token: Any?
     static var numOfVehicles = 0
@@ -32,7 +34,7 @@ struct CVD {
     static var pass = ""
     static var VehicleTrims = [Character]()
     static var SelectedVehicle = 0
-    static var Data = [JSON]()
+    static var Data = JSON()
     static var GraphSavedValues = 5
     //END GENERAL
     static var BatteryImage = #imageLiteral(resourceName: "FullBattery")
@@ -55,7 +57,6 @@ struct CVD {
         CVD.pass = ""
         CVD.VehicleTrims.removeAll()
         CVD.SelectedVehicle = 0
-        CVD.Data.removeAll()
         CVD.BatteryImage = #imageLiteral(resourceName: "FullBattery")
     }
 

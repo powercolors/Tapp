@@ -22,6 +22,8 @@ class start: NSViewController, NSUserNotificationCenterDelegate {
         NSUserNotificationCenter.default.delegate = self
         print(currentSSIDs().first!)
         let SSID = currentSSIDs().first!
+        self.tapp.font = NSFont(name: "KaushanScript-Regular", size: 72.0)
+        
         /*if(UserDefaults.standard.string(forKey: SSID) != nil) {
             print("known network")
             
@@ -114,6 +116,7 @@ class start: NSViewController, NSUserNotificationCenterDelegate {
 }
     override func viewDidAppear() {
         super.viewDidAppear()
+        self.tapp.font = NSFont(name: "KaushanScript-Regular", size: 72.0)
         self.email.textColor = NSColor.black
         self.shwtk.slideInFromRight()
         self.shwpswd.slideInFromRight()
@@ -252,6 +255,7 @@ class start: NSViewController, NSUserNotificationCenterDelegate {
             else if(self.password.stringValue == "" && self.visPswd.stringValue == "") {
                 print("Both nil")
                 self.or.stringValue = "Please enter your info"
+                self.or.slideInFromRight()
             }
             else if(self.password.stringValue != "" && self.visPswd.stringValue != "") {
                 pass = self.password.stringValue
@@ -400,8 +404,10 @@ class start: NSViewController, NSUserNotificationCenterDelegate {
                     }
                 case .failure:
                     print("Token Check failure")
-                    return
-                    
+                    self.or.textColor = NSColor.red
+                    self.or.stringValue = "Invalid Token"
+                    self.or.slideInFromRight()
+                    self.acctok.resignFirstResponder()
                 }
         }
     
@@ -452,14 +458,19 @@ class SplitView : NSSplitViewController {
                 let data = response.result.value
                 if(data != nil) {
                     let json = JSON(data!)
-                    CVD.Data.removeAll()
-                    CVD.Data.append(json)
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATIONKEY), object: nil)
+                    CVD.Data = JSON.null
+                    CVD.Data = json
                 }
                 else {
                     print("error")
                 }
         }
+            .response(completionHandler: { response in
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: NOTIFICATIONKEY), object: nil)
+                
+            }
+        
+        )
     }
 }
 

@@ -186,6 +186,7 @@ extension Gigawatt {
     }
 }
 
+@available(OSX 10.12.2, *)
 extension Plaid {
     func Alert(_ title:String,_ text:String,_ style:NSAlertStyle,_ buttonCount:Int, _ buttonNames:NSArray) -> Int {
         var count = buttonCount
@@ -237,7 +238,11 @@ extension NSViewController {
     }
 }
 
-extension NSMutableAttributedString{
+extension NSMutableAttributedString {
+
+}
+
+extension NSAttributedString {
     func setColorForText(attrStr:NSMutableAttributedString, _ textToFind: String, with color: NSColor) {
         let inputLength = attrStr.string.count
         let searchString = textToFind
@@ -250,5 +255,12 @@ extension NSMutableAttributedString{
                 range = NSRange(location: range.location + range.length, length: inputLength - (range.location + range.length))
             }
         }
+    }
+    static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString
+    {
+        let result = NSMutableAttributedString()
+        result.append(left)
+        result.append(right)
+        return result
     }
 }

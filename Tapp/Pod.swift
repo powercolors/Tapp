@@ -44,6 +44,8 @@ class MenuController: NSViewController {
     override func viewDidAppear() {
         super .viewDidAppear()
         self.view.window?.styleMask.remove(NSWindowStyleMask.resizable)
+        self.Tapp2.font = NSFont(name: "KaushanScript-Regular", size: 42.0)
+        self.HudsonGraeme.font = NSFont(name: "KaushanScript-Regular", size: 14.0)
     }
     @IBOutlet weak var Home: FlatButton!
     @IBOutlet weak var Battery: FlatButton!
@@ -52,6 +54,8 @@ class MenuController: NSViewController {
     @IBOutlet weak var Info: FlatButton!
     @IBOutlet weak var Settings: FlatButton!
     @IBOutlet weak var Logout: FlatButton!
+    @IBOutlet weak var Tapp2: NSTextField!
+    @IBOutlet weak var HudsonGraeme: NSTextField!
     
     var tabViewController = NSTabViewController()
     

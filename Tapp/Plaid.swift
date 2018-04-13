@@ -12,7 +12,10 @@ import SwiftyJSON
 import Alamofire
 import Locksmith
 import FlatButton
+import MapKit
+
 let NOTIFICATIONKEY = "Tapp2"
+@available(OSX 10.12.2, *)
 class Plaid: NSViewController, NSUserNotificationCenterDelegate {
     @IBOutlet weak var Lock: FlatButton!
     @IBOutlet weak var RStart: FlatButton!
@@ -24,11 +27,22 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
     @IBOutlet weak var ChargePort: FlatButton!
     @IBOutlet weak var VIN: NSTextField!
     @IBOutlet weak var ChargeLabel: NSTextField!
+    @IBOutlet weak var Shift: NSTextField!
+    
+    //Touchbar
+    @IBOutlet weak var TbChargePort: NSTouchBarItem!
+    @IBOutlet weak var TbLock: NSTouchBarItem!
+    @IBOutlet weak var TbTrunk: NSTouchBarItem!
+    @IBOutlet weak var TbFrunk: NSTouchBarItem!
+    @IBOutlet weak var TbHorn: NSTouchBarItem!
+    @IBOutlet weak var TbFlashLights: NSTouchBarItem!
+    @IBOutlet weak var TbRStart: NSTouchBarItem!
+    //End Touchbar
     
     var token = CVD.Token!
     var vehicleID = CVD.vehicleIDs[CVD.SelectedVehicle]
     var headers = CVD.headers
-    let json = CVD.Data[CVD.SelectedVehicle]
+
     let v = CVD.SelectedVehicle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +51,7 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
         if(UserDefaults.standard.value(forKey: "GraphXMax") != nil) {
             CVD.GraphSavedValues = UserDefaults.standard.integer(forKey: "GraphXMax")
         }
-        
+            let json = CVD.Data
         let isLocked = json["response"]["vehicle_state"]["locked"].boolValue
         if(isLocked == true) {
             print("Vehicle is locked")
@@ -60,9 +74,15 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
     override func viewDidAppear() {
         super.viewDidAppear()
         self.getcardata()
+        let json = CVD.Data
         NotificationCenter.default.addObserver(self, selector: #selector(self.getcardata), name: NSNotification.Name(rawValue: NOTIFICATIONKEY), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.ColorChange(_:)), name: NSNotification.Name(rawValue: "ChangeColor"), object: nil)
-        self.view.layer?.backgroundColor = NSColor(red: 85, green: 85, blue: 85, alpha: 1.0).cgColor
+        
+        let latitude:CLLocationDegrees = json["response"]["drive_state"]["latitude"].doubleValue
+         let longitude:CLLocationDegrees = json["response"]["drive_state"]["longitude"].doubleValue
+        let loc = CLLocation(latitude: latitude, longitude: longitude)
+        
+
         let jsonCharge = json["response"]["charge_state"]["charging_state"].stringValue
         if(jsonCharge == "Complete") {
             self.ChargeLabel.stringValue = "Charging Complete"
@@ -71,12 +91,53 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
             self.ChargeLabel.stringValue = "Charge Cable Connected"
             self.ChargeLabel.textColor = .systemBlue
         } else if(jsonCharge == "null") {
-            self.ChargeLabel.stringValue = ""
+            self.ChargeLabel.stringValue = "Disconnected (assumed)"
+            self.ChargeLabel.textColor = .systemOrange
         } else if(jsonCharge == "Supercharging") {
             self.ChargeLabel.stringValue = "Supercharging"
             self.ChargeLabel.textColor = .systemPurple
+        } else if(jsonCharge == "Disconnected"){
+            self.ChargeLabel.stringValue = "Charge Cable Disconnected"
+            self.ChargeLabel.textColor = .systemGreen
         } else {
             self.ChargeLabel.stringValue = jsonCharge
+        }
+        var driveState = json["response"]["drive_state"]["shift_state"].stringValue
+        if(json["response"]["drive_state"]["shift_state"] != JSON.null) {
+        driveState = json["response"]["drive_state"]["shift_state"].stringValue
+        } else {
+            driveState = "null"
+        }
+        let speed = json["response"]["drive_state"]["speed"].intValue
+        let units = json["response"]["gui_settings"]["gui_distance_units"].stringValue
+        if(driveState != "null" && driveState != "P") {
+            switch driveState {
+            case "D":
+                self.ChargeLabel.stringValue = "Vehicle is driving at \(speed)\(units)"
+            case "R":
+                self.ChargeLabel.stringValue = "Vehicle is reversing at \(speed)\(units)"
+            case "N":
+                self.ChargeLabel.stringValue = "Vehicle is in neutral, travelling at \(speed)\(units)"
+            default:
+                0
+            }
+            self.Shift.stringValue = driveState
+        } else {
+            self.Shift.stringValue = "P"
+        }
+        let geoc = CLGeocoder()
+        geoc.reverseGeocodeLocation(loc) { placemarks, error in
+            if let e = error {
+            } else {
+                let placeArray = placemarks
+                var placeMark: CLPlacemark!
+                placeMark = placeArray?[0]
+                guard let address = placeMark.addressDictionary else {
+                    return
+                }
+                let arr = address["FormattedAddressLines"] as! NSArray
+                self.ChargeLabel.stringValue += (" at " + (arr[0] as! String))
+            }
         }
 
     }
@@ -97,7 +158,7 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
     }
     @objc func getcardata(){
         print("hello")
-                let json = CVD.Data[v]
+                let json = CVD.Data
         self.VIN.stringValue = "VIN : \(json["response"]["vin"].stringValue)"
                 let vehMod = json["response"]["vehicle_config"]["car_type"].stringValue
                 CVD.VehicleTrims.append(vehMod.last!)
@@ -204,8 +265,8 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
                     response in
                     let data = response.result.value
                     let json = JSON(data!)
-                    CVD.Data.remove(at: 0)
-                    CVD.Data.append(json)
+                    CVD.Data = JSON.null
+                    CVD.Data = json
                     let isLocked = json["response"]["vehicle_state"]["locked"].boolValue
                     if(isLocked == true) {
                         print("Button pressed, vehicle currently locked")
@@ -230,16 +291,45 @@ class Plaid: NSViewController, NSUserNotificationCenterDelegate {
     
     
     @IBAction func RStart(_ sender: Any) {
-        let password = CVD.pass
-        let url = URL(string:"https://owner-api.teslamotors.com/api/1/vehicles/\(vehicleID)/command/remote_start_drive?password=\(password)")
+        let Alert = NSAlert()
+        let tField = NSSecureTextField(frame: NSMakeRect(0, 0, 500, 20))
+        Alert.accessoryView = tField
+        Alert.messageText = "Would you like to remotely start your vehicle?"
+        Alert.informativeText = "By clicking either of the \"Yes\" options, you are enabling keyless driving in your vehicle for two minutes."
+        Alert.addButton(withTitle: "Cancel")
+        Alert.addButton(withTitle: "Yes, Start and Unlock my vehicle")
+        Alert.addButton(withTitle: "Yes, Start my Vehicle")
+        Alert.layout()
+        let response = Alert.runModal()
+        if(response == 1001) {
+            print(1001)
+            let url = URL(string:"https://owner-api.teslamotors.com/api/1/vehicles/\(vehicleID)/command/remote_start_drive?password=\(tField.stringValue)")
             
-        let _ = Alamofire.request(url!, method: .post, parameters: [:], encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-            let data = response.result.value
-            let json = JSON(data!)
+            let _ = Alamofire.request(url!, method: .post, parameters: [:], encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+                let json = CVD.Data
+                let isLocked = json["response"]["vehicle_state"]["locked"].boolValue
+                if(isLocked == true) {
+                    print("Remote Start w/unlock, vehicle currently locked")
+                    let urll = URL(string:"https://owner-api.teslamotors.com/api/1/vehicles/\(self.vehicleID)/command/door_unlock")
+                    let _ = Alamofire.request(urll!, method: .post, parameters: [:], encoding: JSONEncoding.default, headers: CVD.headers).responseJSON { response in
+                        self.Lock.title = "Lock"
+                    }
+                }
+            }
+        } else if(response == 1002) {
+            let url = URL(string:"https://owner-api.teslamotors.com/api/1/vehicles/\(vehicleID)/command/remote_start_drive?password=\(tField.stringValue)")
             
-            print(json, response)
-            
+            let _ = Alamofire.request(url!, method: .post, parameters: [:], encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+                let data = response.result.value
+                let json = JSON(data!)
+                
+                print(json, response)
+                
+            }
+        } else if(response == 1000) {
+            print(1000)
         }
+
     }
     
     @IBAction func FlashLights(_ sender: Any) {

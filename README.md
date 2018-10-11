@@ -1,4 +1,10 @@
+
 # Tapp2
+
+## 10/11/18 UPDATE
+Hello first of all thanks for your continued support - it's very helpful!
+I have decided to discontinue Tapp Version 2 and develop Tapp version 3. I have a lot planned in this update including a redesign. I will be hiring an interface designer for this purpose. I do not know how long this will take between getting the site back up and getting the next version out..
+
 [![Build Status](https://travis-ci.org/HudsonGraeme/Tapp.svg?branch=master)](https://travis-ci.org/HudsonGraeme/Tapp)
 
 ## Public Release of Tapp2
